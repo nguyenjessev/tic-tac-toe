@@ -7,18 +7,34 @@ module TicTacToe
 
     def initialize
       @board = Board.new
+      @player1 = Player.new('X')
+      @player2 = Player.new('O')
     end
 
     private
 
     def start_game
       game_over = false
+      current_player = player1
 
       puts 'A new game has started!'
 
       until game_over
         board.display
+        take_turn(current_player)
       end
+    end
+
+    def take_turn(player)
+      puts "Player #{player.team}, it is now your turn."
+    end
+  end
+
+  # This class represents a player
+  class Player
+    attr_reader :team
+    def initialize(team)
+      @team = team
     end
   end
 
@@ -32,16 +48,29 @@ module TicTacToe
     end
 
     def to_s
-      board.each_with_index do |row, index|
-        puts "#{row[0]} | #{row[1]} | #{row[2]}"
-        puts '- - - - -' unless index == 2
+      board.each_with_index do |row, row_index|
+        row.each_with_index do |cell, column_index|
+          print cell.status == ' ' ? (column_index + 1) + (3 * row_index) : cell
+          print ' | ' unless column_index == 2
+        end
+
+        puts "\n- - - - -" unless row_index == 2
       end
+
+      puts
+    end
+
+    def place_marker(cell, team)
+      column_index = (cell - 1) % 3
+      row_index = (cell - 1) / 3
+
+      board[row_index][column_index].status = team
     end
 
     private
 
     def build_board
-      @board = Array.new(board_size, Array.new(board_size, Cell.new))
+      @board = Array.new(board_size) { Array.new(board_size) { Cell.new } }
     end
   end
 
