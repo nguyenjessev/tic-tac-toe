@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module TicTacToe
-  # This class represents te game instance
+  # This class represents the game instance
   class Game
     attr_reader :board
 
@@ -22,11 +22,19 @@ module TicTacToe
       until winner.nil? == false
         board.display
         play_turn(current_player)
+        winner = check_for_winner
       end
     end
 
     def play_turn(player)
       puts "Player #{player.team}, it is now your turn."
+      puts 'Enter a number to take the corresponding cell in the game board:'
+      choice = read_player_input
+      board.place_marker(choice, player.team)
+    end
+
+    def read_player_input
+      gets.chomp
     end
   end
 
