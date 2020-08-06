@@ -21,11 +21,11 @@ module TicTacToe
 
       until game_over
         board.display
-        take_turn(current_player)
+        play_turn(current_player)
       end
     end
 
-    def take_turn(player)
+    def play_turn(player)
       puts "Player #{player.team}, it is now your turn."
     end
   end
