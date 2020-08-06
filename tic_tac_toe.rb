@@ -36,6 +36,10 @@ module TicTacToe
     def read_player_input
       gets.chomp
     end
+
+    def check_for_winner
+      nil
+    end
   end
 
   # This class represents a player
