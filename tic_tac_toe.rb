@@ -14,12 +14,12 @@ module TicTacToe
     private
 
     def start_game
-      game_over = false
+      winner = nil
       current_player = player1
 
       puts 'A new game has started!'
 
-      until game_over
+      until winner.nil? == false
         board.display
         play_turn(current_player)
       end
