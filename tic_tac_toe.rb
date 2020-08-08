@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'pry'
+
 module TicTacToe
   # This class represents the game instance
   class Game
@@ -19,30 +21,36 @@ module TicTacToe
       loop do
         board.show
         play_turn(current_player)
-        if game_over
-          return
-        else
-          switch_turns
-        end
+        break if game_over
+
+        switch_turns
       end
     end
 
     private
 
-    def switch_turns
-      current_player = if current_player == player1
-                         player2
-                       else
-                         player1
-                       end
+    def game_over
+      false
+    end
 
+    def switch_turns
+      self.current_player = if current_player == player1
+                              player2
+                            else
+                              player1
+                            end
       current_player
     end
 
     def play_turn(player)
       puts "Player #{player.team}, it is now your turn."
-      puts 'Enter a number to take the corresponding cell in the game board:'
-      choice = read_player_input
+      while true
+        puts 'Enter a number to take the corresponding cell in the game board:'
+        choice = read_player_input
+        break if choice.between?(1, 9)
+
+        puts 'Invalid input. Please try again.'
+      end
       board.place_marker(choice, player.team)
     end
 
