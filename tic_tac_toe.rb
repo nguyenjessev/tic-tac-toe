@@ -21,7 +21,7 @@ module TicTacToe
       loop do
         board.show
         play_turn(current_player)
-        break if game_over
+        break if game_over != false
 
         switch_turns
       end
@@ -107,6 +107,10 @@ module TicTacToe
 
       cell.status = team
       true
+    end
+
+    def winning_positions
+      
     end
 
     private
