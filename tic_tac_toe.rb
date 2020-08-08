@@ -47,8 +47,9 @@ module TicTacToe
       while true
         puts 'Enter a number to take the corresponding cell in the game board:'
         choice = read_player_input
-        break if choice.between?(1, 9)
+        break if board.place_marker(choice, player.team)
 
+        board.show
         puts 'Invalid input. Please try again.'
       end
       board.place_marker(choice, player.team)
@@ -95,11 +96,17 @@ module TicTacToe
       puts
     end
 
-    def place_marker(cell, team)
-      column_index = (cell - 1) % 3
-      row_index = (cell - 1) / 3
+    def place_marker(index, team)
+      return false unless index.between?(1, 9)
 
-      board[row_index][column_index].status = team
+      column_index = (index - 1) % 3
+      row_index = (index - 1) / 3
+      cell = board[row_index][column_index]
+
+      return false unless cell.empty?
+
+      cell.status = team
+      true
     end
 
     private
@@ -119,6 +126,10 @@ module TicTacToe
 
     def to_s
       status
+    end
+
+    def empty?
+      status == ' '
     end
   end
 end
