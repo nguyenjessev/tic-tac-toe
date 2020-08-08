@@ -3,27 +3,40 @@
 module TicTacToe
   # This class represents the game instance
   class Game
-    attr_reader :board
+    attr_accessor :current_player
+    attr_reader :board, :player1, :player2
 
     def initialize
       @board = Board.new
       @player1 = Player.new('X')
       @player2 = Player.new('O')
+      @current_player = player1
+    end
+
+    def start_game
+      puts "\nA new game has started!"
+
+      loop do
+        board.show
+        play_turn(current_player)
+        if game_over
+          return
+        else
+          switch_turns
+        end
+      end
     end
 
     private
 
-    def start_game
-      winner = nil
-      current_player = player1
+    def switch_turns
+      current_player = if current_player == player1
+                         player2
+                       else
+                         player1
+                       end
 
-      puts 'A new game has started!'
-
-      until winner.nil? == false
-        board.display
-        play_turn(current_player)
-        winner = check_for_winner
-      end
+      current_player
     end
 
     def play_turn(player)
@@ -34,10 +47,10 @@ module TicTacToe
     end
 
     def read_player_input
-      gets.chomp
+      gets.chomp.to_i
     end
 
-    def check_for_winner
+    def check_for_winner(player)
       nil
     end
   end
@@ -59,7 +72,8 @@ module TicTacToe
       build_board
     end
 
-    def to_s
+    def show
+      puts
       board.each_with_index do |row, row_index|
         row.each_with_index do |cell, column_index|
           print cell.status == ' ' ? (column_index + 1) + (3 * row_index) : cell
@@ -69,6 +83,7 @@ module TicTacToe
         puts "\n- - - - -" unless row_index == 2
       end
 
+      puts
       puts
     end
 
@@ -99,3 +114,6 @@ module TicTacToe
     end
   end
 end
+
+game = TicTacToe::Game.new
+game.start_game
