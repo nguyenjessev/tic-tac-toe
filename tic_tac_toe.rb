@@ -30,7 +30,7 @@ module TicTacToe
     private
 
     def game_over
-      false
+      return :draw if board.all_empty?
     end
 
     def switch_turns
@@ -81,6 +81,10 @@ module TicTacToe
       build_board
     end
 
+    def all_empty?
+      board.all? { |row| row.all?(&:empty?) }
+    end
+
     def show
       puts
       board.each_with_index do |row, row_index|
@@ -110,7 +114,7 @@ module TicTacToe
     end
 
     def winning_positions
-      
+      board + board.transpose
     end
 
     private
