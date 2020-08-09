@@ -21,16 +21,30 @@ module TicTacToe
       loop do
         board.show
         play_turn(current_player)
-        break if game_over != false
+        break unless game_over.nil?
 
         switch_turns
       end
+
+      board.show
+      print_endgame_message
     end
 
     private
 
+    def print_endgame_message
+      if game_over == :draw
+        puts 'The game is a draw!'
+      else
+        puts "Congratulations! Player #{current_player.team} wins the game!"
+      end
+    end
+
     def game_over
-      return :draw if board.all_empty?
+      return current_player if board.winning_positions.any? do |line|
+        line.all? { |cell| cell.status == current_player.team }
+      end
+      return :draw if board.all_full?
     end
 
     def switch_turns
@@ -58,10 +72,6 @@ module TicTacToe
     def read_player_input
       gets.chomp.to_i
     end
-
-    def check_for_winner(player)
-      nil
-    end
   end
 
   # This class represents a player
@@ -81,8 +91,10 @@ module TicTacToe
       build_board
     end
 
-    def all_empty?
-      board.all? { |row| row.all?(&:empty?) }
+    def all_full?
+      board.all? do |row|
+        row.none?(&:empty?)
+      end
     end
 
     def show
@@ -103,9 +115,7 @@ module TicTacToe
     def place_marker(index, team)
       return false unless index.between?(1, 9)
 
-      column_index = (index - 1) % 3
-      row_index = (index - 1) / 3
-      cell = board[row_index][column_index]
+      cell = get_cell(index)
 
       return false unless cell.empty?
 
@@ -114,10 +124,21 @@ module TicTacToe
     end
 
     def winning_positions
-      board + board.transpose
+      board + board.transpose + diagonals
     end
 
     private
+
+    def get_cell(index)
+      column_index = (index - 1) % 3
+      row_index = (index - 1) / 3
+      board[row_index][column_index]
+    end
+
+    def diagonals
+      [[get_cell(1), get_cell(5), get_cell(9)],
+       [get_cell(3), get_cell(5), get_cell(7)]]
+    end
 
     def build_board
       @board = Array.new(board_size) { Array.new(board_size) { Cell.new } }
